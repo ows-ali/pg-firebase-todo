@@ -4,6 +4,9 @@ class TodoDataService {
   getAll(pageNumber=1) {
     return http.get(`/todos/${pageNumber}`);
   }
+  getAllDone() {
+    return http.get(`/todosdone/`);
+  }
 
   get(id) {
     return http.get(`/todo/${id}`);

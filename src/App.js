@@ -25,6 +25,11 @@ function App() {
           </Link>
           <div className="navbar-nav mr-auto">
             <li className="nav-item">
+              <Link to={"/dashboard"} className="nav-link">
+                Dashboard
+              </Link>
+            </li>
+            <li className="nav-item">
               <Link to={"/todos"} className="nav-link">
                 Todos
               </Link>
@@ -56,10 +61,10 @@ function App() {
 
         <div className="container mt-3">
           <Switch>
-            <Route exact path={["/", "/todos"]} component={TodosList} />
+            <Route exact path="/todos" component={TodosList} />
             <Route exact path="/login" component={Login} />
             <Route exact path="/register" component={Register} />
-            <Route exact path="/dashboard" component={Dashboard} />
+            <Route exact path={["/dashboard",'/']} component={Dashboard} />
             <Route exact path="/add" component={AddTodo} />
             <Route path="/todos/:id" component={Todo} />
           </Switch>

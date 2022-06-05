@@ -4,9 +4,13 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import "./Dashboard.css";
 import { auth, db, logout } from "../../config/firebase";
 import { query, collection, getDocs, where } from "firebase/firestore";
+import TodoDataService from "../../services/todo.service";
+
 function Dashboard(props) {
   const [user, loading, error] = useAuthState(auth);
   const [name, setName] = useState("");
+  const [totalTodos, setTotalTodos] = useState(0)
+  const [totalTodosDone, setTotalTodosDone] = useState(0)
 //   const navigate = useNavigate();
   const fetchUserName = async () => {
     try {
@@ -20,7 +24,29 @@ function Dashboard(props) {
     }
   };
   useEffect(() => {
+    TodoDataService.getAll()
+    .then(response => {
+      
+        setTotalTodos(response.data.count)
+    })
+    .catch(err=>{
+        console.log(err)
+
+    })
+
+    TodoDataService.getAllDone()
+    .then(response => {
+
+        
+        setTotalTodosDone(response.data)
+    })
+    .catch(err=>{
+        console.log(err)
+
+    })
+
     if (loading) return;
+
     if (!user) {
      
     //  alert('no user')
@@ -31,20 +57,40 @@ function Dashboard(props) {
 
     fetchUserName();
   }, [user, loading]);
+  const Reports = () => {
+      return (<div className="reports__container">
+      Here is your TODO List Summary
+       <div><b> Total Tasks:</b> {totalTodos}</div>
+       <div><b>Total tasks completed:</b> {totalTodosDone}</div>
+       <div><b>Total tasks pending:</b> {totalTodos - totalTodosDone}</div>
+      {/* <button className="dashboard__btn" onClick={logout}>
+       Logout
+      </button> */}
+    </div>)
+  }
   if (!user){
-      return (<div>You are not logged in</div>)
+      return (
+      <>
+          <div>**You are not logged in**</div>
+            <Reports />
+      </>
+      
+      )
   }
    return  (
    
     <div className="dashboard">
        <div className="dashboard__container">
-        Logged in as
-         <div>{name}</div>
-         <div>{user?.email}</div>
-         <button className="dashboard__btn" onClick={logout}>
+        You are logged in as
+          <div><b> Name:</b> {name}</div>
+          <div><b>Email:</b> {user?.email}</div>
+         {/* <button className="dashboard__btn" onClick={logout}>
           Logout
-         </button>
+         </button> */}
        </div>
+       <Reports  />
+       
+
      </div> 
   );
 }
