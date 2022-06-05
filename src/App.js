@@ -6,9 +6,17 @@ import "./App.css";
 import AddTodo from "./components/add-todo.component";
 import Todo from "./components/todo.component";
 import TodosList from "./components/todos-list.component";
+import Register from "./components/register/register";
+import Login from "./components/login/login";
+import Dashboard from "./components/dashboard/dashboard";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth, db, logout } from "./config/firebase";
+import { signOut } from "firebase/auth";
 
-class App extends Component {
-  render() {
+function App() {
+  const [user, loading, error] = useAuthState(auth);
+
+  // render() {
     return (
       <div>
         <nav className="navbar navbar-expand navbar-dark bg-dark">
@@ -26,19 +34,39 @@ class App extends Component {
                 Add
               </Link>
             </li>
+            <li className="nav-item" style={{display: user?'none':''}}>
+              <Link to={"/register"} className="nav-link">
+                Register
+              </Link>
+            </li>
+            <li className="nav-item" style={{display: user?'none':''}}>
+              <Link to={"/login"} className="nav-link">
+                Login
+              </Link>
+            </li>
+
+            <li className="nav-item" style={{display: !user?'none':''}}>
+              <span onClick={()=>{signOut(auth)}} className="nav-link">
+                Logout
+              </span>
+            </li>
+
           </div>
         </nav>
 
         <div className="container mt-3">
           <Switch>
             <Route exact path={["/", "/todos"]} component={TodosList} />
+            <Route exact path="/login" component={Login} />
+            <Route exact path="/register" component={Register} />
+            <Route exact path="/dashboard" component={Dashboard} />
             <Route exact path="/add" component={AddTodo} />
             <Route path="/todos/:id" component={Todo} />
           </Switch>
         </div>
       </div>
     );
-  }
+  // }
 }
 
 export default App;

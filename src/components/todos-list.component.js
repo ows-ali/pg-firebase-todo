@@ -33,7 +33,7 @@ export default class TodosList extends Component {
       .then(response => {
         this.setState({
           todos: response.data.data,
-          totalPages: Math.ceil(response.data.count / 5),
+          totalPages: Math.ceil(response.data.count / 10),
           currentPage: pageNumber
         });
         console.log('dss',this.state.totalPages)
